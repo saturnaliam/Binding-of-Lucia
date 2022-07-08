@@ -1,3 +1,4 @@
 <items gfxroot="gfx/items/" version="1">
     <passive cache="damage luck" name="Roofing Nail" description="Sturdy!" gfx="roofing-nail.png" quality="2" tags="summonable offensive" devilprice="1" />
+    <passive cache="damage" name="Winning Streak" description="Today's your lucky day!" gfx="winning-streak.png" quality="3" tags="offensive" />
 </items>
