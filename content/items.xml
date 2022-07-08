@@ -1,0 +1,3 @@
+<items gfxroot="gfx/items/" version="1">
+    <passive cache="damage luck" name="Roofing Nail" description="Sturdy!" gfx="roofing-nail.png" quality="2" tags="summonable offensive" devilprice="1" />
+</items>
