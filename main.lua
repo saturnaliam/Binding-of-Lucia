@@ -37,23 +37,23 @@ if EID then
     EID:addCollectible(BOLItemId.WINNING_STREAK, "↑ +0.5 Damage per point of luck#!!! Cap at +12 luck")
 end
 
--- Updates inventory
-local function BOLUpdateItems(player) 
-    BOLHasItem.RNail = player:HasCollectible(BOLItemId.RNAIL)
-end
-
--- When run starts / continues
-function bol:onPlayerInit(player)
-    BOLUpdateItems(player)
-end
-
-bol:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, bol.onPlayerInit)
-
-
 function bol:onCache(player, cacheFlag)
     if cacheFlag == CacheFlag.CACHE_DAMAGE then 
         if player:HasCollectible(BOLItemId.RNAIL) then
             player.Damage = player.Damage + BOLItemBonus.RNAIL_DMG
+        end
+
+       if player:HasCollectible(BOLItemId.WINNING_STREAK) then
+                wsLuck = player.Luck
+
+                if wsLuck >= 1 then
+                    if wsLuck >= 12 then
+                        wsLuck = 12
+                    end
+
+                    player.Damage = player.Damage + BOLItemBonus.WIN_STREAK_DMG[math.floor(wsLuck)]
+                end
+            end
         end
 
     if cacheFlag == CacheFlag.CACHE_LUCK then
@@ -67,8 +67,12 @@ bol:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, bol.onCache)
 
 -- Updates passive effects
 function bol:onUpdate(player)
-
-    BOLUpdateItems(player)
+    if game:GetFrameCount() == 1 then
+        Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, BOLItemId.WINNING_STREAK, Vector(320,280), Vector(0,0), nil)
+    end
+    
+    player:AddCacheFlags(CacheFlag.CACHE_ALL)
+    player:EvaluateItems()
 end
 
 bol:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, bol.onUpdate)
