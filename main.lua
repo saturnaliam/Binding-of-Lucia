@@ -3,21 +3,38 @@ local game = Game()
 local MAX_TEAR = 5
 
 local BOLItemId = {
-    RNAIL = Isaac.GetItemIdByName("Roofing Nail")
+    RNAIL = Isaac.GetItemIdByName("Roofing Nail"),
+    WINNING_STREAK = Isaac.GetItemIdByName("Winning Streak")
 }
 
 local BOLHasItem = {
-    RNail = false
+    RNail = false,
+    winningStreak = false
 }
 
 local BOLItemBonus = {
     RNAIL_DMG = 0.5,
-    RNAIL_LCK = 1
+    RNAIL_LCK = 1,
+    WIN_STREAK_DMG = {
+        0.25,
+        0.5,
+        0.75,
+        1,
+        1.25,
+        1.5,
+        1.75,
+        2,
+        2.25,
+        2.5,
+        2.75,
+        3
+    }
 }
 
 -- EID Descriptions
 if EID then 
     EID:addCollectible(BOLItemId.RNAIL, "↑ +0.5 Damage#↑ +1 Luck")
+    EID:addCollectible(BOLItemId.WINNING_STREAK, "↑ +0.5 Damage per point of luck#!!! Cap at +12 luck")
 end
 
 -- Updates inventory
