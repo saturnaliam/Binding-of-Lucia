@@ -38,12 +38,23 @@ local SoyBean = {
     collected = false
 }
 
+local SlowRoll = {
+    ID = Isaac.GetPillEffectByName("Slow Roll!"),
+    TEAR_MULT_DWN = 0.2,
+    DMG_MULT_UP = 25,
+    SHTSPD_MULT_UP = 0.2,
+    collected = false
+}
+
 SoyBean.Color = Isaac.AddPillEffectToPool(SoyBean.ID)
+SlowRoll.Color = Isaac.AddPillEffectToPool(SlowRoll.ID)
 
 -- EID Descriptions
 if EID then 
     EID:addCollectible(BOLItemId.RNAIL, "↑ +0.5 Damage#↑ +1 Luck")
     EID:addCollectible(BOLItemId.WINNING_STREAK, "↑ +0.5 Damage per point of luck#!!! Cap at +12 luck")
+    EID:addPill(SoyBean.ID, "{{Collectible330}} Soy Milk effect for one room#↑ x5.5 Tears rate#↓ 0.2x Damage#")
+    EID:addPill(SlowRoll.ID, "↑ x25 Damage#↓ x0.2 Tears#↓ 0.2x Shot Speed#")
 end
 
 function bol:onCache(player, cacheFlag)
@@ -68,14 +79,24 @@ function bol:onCache(player, cacheFlag)
         if SoyBean.collected then 
             player.Damage = player.Damage * SoyBean.NEG_DMG_MULT
         end
+
+        if SlowRoll.collected then
+            player.Damage = player.Damage * SlowRoll.DMG_MULT_UP
+        end
     end
 
     if cacheFlag == CacheFlag.CACHE_FIREDELAY then
         if SoyBean.collected then
             local BFR = 30 / (player.MaxFireDelay + 1)
-            print(BFR)
             BFR = BFR * SoyBean.BONUS_TEAR_MULT
-            print(BFR)
+            NFD = (30 - BFR) / BFR
+            DFD = player.MaxFireDelay - NFD
+            player.MaxFireDelay = player.MaxFireDelay - DFD
+        end
+
+        if SlowRoll.collected then
+            local BFR = 30 / (player.MaxFireDelay + 1)
+            BFR = BFR * SlowRoll.TEAR_MULT_DWN
             NFD = (30 - BFR) / BFR
             DFD = player.MaxFireDelay - NFD
             player.MaxFireDelay = player.MaxFireDelay - DFD
@@ -85,6 +106,12 @@ function bol:onCache(player, cacheFlag)
     if cacheFlag == CacheFlag.CACHE_LUCK then
         if player:HasCollectible(BOLItemId.RNAIL) then
             player.Luck = player.Luck + BOLItemBonus.RNAIL_LCK
+        end
+    end
+
+    if cacheFlag == CacheFlag.CACHE_SHOTSPEED then
+        if SlowRoll.collected then
+            player.ShotSpeed = player.ShotSpeed * SlowRoll.SHTSPD_MULT_UP
         end
     end
 end
@@ -100,6 +127,11 @@ function bol:onUpdate(player)
     if SoyBean.Room ~= nil and game:GetLevel():GetCurrentRoomIndex() ~= SoyBean.Room then
         SoyBean.Room = nil
         SoyBean.collected = false
+    end
+
+    if SlowRoll.Room ~= nil and game:GetLevel():GetCurrentRoomIndex() ~= SlowRoll.Room then
+        SlowRoll.Room = nil
+        SlowRoll.collected = false
     end
 
     player:AddCacheFlags(CacheFlag.CACHE_ALL)
@@ -119,3 +151,16 @@ function SoyBean.Proc(_PillEffect)
 end
 
 bol:AddCallback(ModCallbacks.MC_USE_PILL, SoyBean.Proc, SoyBean.ID)
+
+function SlowRoll.Proc(_PillEffect) 
+    local player = game:GetPlayer(0)
+    SlowRoll.OldDmg = player.Damage
+    SlowRoll.OldTear = player.MaxFireDelay
+    SlowRoll.OldSS = player.ShotSpeed
+    SlowRoll.Room = game:GetLevel():GetCurrentRoomIndex()
+    SlowRoll.collected = true
+    player:AddCacheFlags(CacheFlag.CACHE_ALL)
+    player:EvaluateItems()
+end
+
+bol:AddCallback(ModCallbacks.MC_USE_PILL, SlowRoll.Proc, SlowRoll.ID)
