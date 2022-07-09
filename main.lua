@@ -31,6 +31,15 @@ local BOLItemBonus = {
     }
 }
 
+local SoyBean = {
+    ID = Isaac.GetPillEffectByName("Soy Bean!"),
+    BONUS_TEAR_MULT = 5.5,
+    NEG_DMG_MULT = 0.2,
+    collected = false
+}
+
+SoyBean.Color = Isaac.AddPillEffectToPool(SoyBean.ID)
+
 -- EID Descriptions
 if EID then 
     EID:addCollectible(BOLItemId.RNAIL, "↑ +0.5 Damage#↑ +1 Luck")
@@ -44,17 +53,34 @@ function bol:onCache(player, cacheFlag)
         end
 
        if player:HasCollectible(BOLItemId.WINNING_STREAK) then
-                wsLuck = player.Luck
+            wsLuck = player.Luck
 
-                if wsLuck >= 1 then
-                    if wsLuck >= 12 then
-                        wsLuck = 12
-                    end
+            if wsLuck >= 1 then
 
-                    player.Damage = player.Damage + BOLItemBonus.WIN_STREAK_DMG[math.floor(wsLuck)]
+                if wsLuck >= 12 then
+                    wsLuck = 12
                 end
+
+                player.Damage = player.Damage + BOLItemBonus.WIN_STREAK_DMG[math.floor(wsLuck)]
             end
         end
+
+        if SoyBean.collected then 
+            player.Damage = player.Damage * SoyBean.NEG_DMG_MULT
+        end
+    end
+
+    if cacheFlag == CacheFlag.CACHE_FIREDELAY then
+        if SoyBean.collected then
+            local BFR = 30 / (player.MaxFireDelay + 1)
+            print(BFR)
+            BFR = BFR * SoyBean.BONUS_TEAR_MULT
+            print(BFR)
+            NFD = (30 - BFR) / BFR
+            DFD = player.MaxFireDelay - NFD
+            player.MaxFireDelay = player.MaxFireDelay - DFD
+        end
+    end
 
     if cacheFlag == CacheFlag.CACHE_LUCK then
         if player:HasCollectible(BOLItemId.RNAIL) then
@@ -68,11 +94,28 @@ bol:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, bol.onCache)
 -- Updates passive effects
 function bol:onUpdate(player)
     if game:GetFrameCount() == 1 then
-        Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_COLLECTIBLE, BOLItemId.WINNING_STREAK, Vector(320,280), Vector(0,0), nil)
+
     end
     
+    if SoyBean.Room ~= nil and game:GetLevel():GetCurrentRoomIndex() ~= SoyBean.Room then
+        SoyBean.Room = nil
+        SoyBean.collected = false
+    end
+
     player:AddCacheFlags(CacheFlag.CACHE_ALL)
     player:EvaluateItems()
 end
 
 bol:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, bol.onUpdate)
+
+function SoyBean.Proc(_PillEffect) 
+    local player = game:GetPlayer(0)
+    SoyBean.OldDmg = player.Damage
+    SoyBean.OldTear = player.MaxFireDelay
+    SoyBean.Room = game:GetLevel():GetCurrentRoomIndex()
+    SoyBean.collected = true
+    player:AddCacheFlags(CacheFlag.CACHE_ALL)
+    player:EvaluateItems()
+end
+
+bol:AddCallback(ModCallbacks.MC_USE_PILL, SoyBean.Proc, SoyBean.ID)
