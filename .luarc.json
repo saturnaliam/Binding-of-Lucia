@@ -139,7 +139,8 @@
         "CustomGameOver",
         "Encyclopedia",
         "DetailedRespawn",
-        "useTSun"
+        "useTSun",
+        "useTHier"
     ],
     "workspace.library": [
         "c:\\Users\\benco\\.vscode\\extensions\\filloax.isaac-lua-api-vscode-1.2.2\\out\\emmylua"

@@ -3,7 +3,8 @@ local game = Game()
 local MAX_TEAR = 5
 
 Card.CARD_TSUN = Isaac.GetCardIdByName("TTheSun")
-local newCardChance = 0.05
+Card.CARD_THIER = Isaac.GetCardIdByName("THierophant")
+local newCardChance = 1
 local cardCooldown = 0
 
 local BOLItemId = {
@@ -61,7 +62,8 @@ if EID then
     EID:addPill(SoyBean.ID, "{{Collectible330}} Soy Milk effect for one room#↑ x5.5 Tears rate#↓ 0.2x Damage#")
     EID:addPill(SlowRoll.ID, "↑ x25 Damage#↓ x0.2 Tears#↓ 0.2x Shot Speed#")
 
-    EID:addCard(Card.CARD_TSUN, "Burns every enemy in the current room.", "XIX - Torn The Sun")
+    EID:addCard(Card.CARD_TSUN, "Burns every enemy in the current room.", "XIX - The Torn Sun")
+    EID:addCard(Card.CARD_THIER, "Spawns 3 black hearts.", "V - The Torn Hierophant")
 end
 
 function bol:onPostUpdate(player)
@@ -93,7 +95,7 @@ function bol:onPostUpdate(player)
                 if data.Init then
                     local roll = entity:GetDropRNG():RandomFloat() 
                         if roll < newCardChance then 
-                            entity.SubType = Card.CARD_TSUN
+                            entity.SubType = Card.CARD_THIER
                     end
                 end
             end
@@ -223,3 +225,13 @@ function useTSun(...)
 end
 
 bol:AddCallback(ModCallbacks.MC_USE_CARD, useTSun, Card.CARD_TSUN)
+
+function useTHier(...)
+    local player = game:GetPlayer(0)
+
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, 6, Vector(player.Position.X + 35, player.Position.Y), Vector(0, 0), player)
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, 6, Vector(player.Position.X - 35, player.Position.Y), Vector(0, 0), player)
+    Isaac.Spawn(EntityType.ENTITY_PICKUP, PickupVariant.PICKUP_HEART, 6, Vector(player.Position.X, player.Position.Y - 35), Vector(0, 0), player)
+end
+
+bol:AddCallback(ModCallbacks.MC_USE_CARD, useTHier, Card.CARD_THIER)
