@@ -3,7 +3,7 @@ local game = Game()
 local MAX_TEAR = 5
 
 Card.CARD_TSUN = Isaac.GetCardIdByName("TTheSun")
-local newCardChance = 1
+local newCardChance = 0.05
 local cardCooldown = 0
 
 local BOLItemId = {
@@ -60,6 +60,8 @@ if EID then
 
     EID:addPill(SoyBean.ID, "{{Collectible330}} Soy Milk effect for one room#↑ x5.5 Tears rate#↓ 0.2x Damage#")
     EID:addPill(SlowRoll.ID, "↑ x25 Damage#↓ x0.2 Tears#↓ 0.2x Shot Speed#")
+
+    EID:addCard(Card.CARD_TSUN, "Burns every enemy in the current room.", "XIX - Torn The Sun")
 end
 
 function bol:onPostUpdate(player)
@@ -68,7 +70,7 @@ function bol:onPostUpdate(player)
             local data = entity:GetData()
             local sprite = entity:GetSprite()
 
-            if sprite:IsPlaying("Collect") and data.Picked = nil then
+            if sprite:IsPlaying("Collect") and data.Picked == nil then
                 data.Picked = true
                 cardCooldown = 30
             end
@@ -81,14 +83,27 @@ function bol:onPostUpdate(player)
                 data.Init = (cardCooldown == 0)
 
                 if data.Init then
-                    for _, buddy in pairs(Isaac.GetRoomEntities()) then
-                        
+                    for _, buddy in pairs(Isaac.GetRoomEntities()) do
+                        if buddy.Type == entity.Type and buddy.Variant == entity.Variant and buddy.SubType == entity.SubType and buddy.Position.X ~= entity.Position.X and buddy.Position.Y ~= entity.Position.Y then
+                            data.Init = false
+                        end
+                    end
+                end
+
+                if data.Init then
+                    local roll = entity:GetDropRNG():RandomFloat() 
+                        if roll < newCardChance then 
+                            entity.SubType = Card.CARD_TSUN
                     end
                 end
             end
         end
     end
+    cardCooldown = math.max(0, cardCooldown - 1)
 end
+
+bol:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, bol.onPostUpdate)
+
 function bol:onCache(player, cacheFlag)
     if cacheFlag == CacheFlag.CACHE_DAMAGE then 
         if player:HasCollectible(BOLItemId.RNAIL) then
@@ -153,7 +168,7 @@ bol:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, bol.onCache)
 -- Updates passive effects
 function bol:onUpdate(player)
     if game:GetFrameCount() == 1 then
-        print(Card.CARD_TSUN)
+
     end
     
     if SoyBean.Room ~= nil and game:GetLevel():GetCurrentRoomIndex() ~= SoyBean.Room then
