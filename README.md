@@ -2,7 +2,7 @@
 
 Hey! Welcome to my first The Binding of Isaac: Repentance mod!
 
-Currently, I have a few ideas:
+Currently, I have a few ideas, with others still in the works!
 
 ## New Pills
 - [x] Slow Roll!
@@ -14,3 +14,15 @@ Currently, I have a few ideas:
   
  ## New Cards
  All of them can be seen [here!](https://github.com/saturnaliam/Binding-of-Lucia/issues/2)
+
+## Active Items
+- [ ] Damnation
+  - One time use
+  - Prevents ANY Devil or Angel deal afterwards, regardless of any items.
+  - Gives flight
+  - High damage up
+  - Speed up
+  - Health down
+
+## Passive Items
+Still in production!
