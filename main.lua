@@ -5,6 +5,7 @@ local MAX_TEAR = 5
 Card.CARD_TSUN = Isaac.GetCardIdByName("TTheSun")
 Card.CARD_THIER = Isaac.GetCardIdByName("THierophant")
 local newCardChance = 1
+local newCardChance = 0.05
 local cardCooldown = 0
 
 local BOLItemId = {
