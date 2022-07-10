@@ -2,6 +2,10 @@ local bol = RegisterMod("The Binding of Lucia", 1)
 local game = Game()
 local MAX_TEAR = 5
 
+Card.CARD_TSUN = Isaac.GetCardIdByName("TTheSun")
+local newCardChance = 0.05
+local cardCooldown = 0
+
 local BOLItemId = {
     RNAIL = Isaac.GetItemIdByName("Roofing Nail"),
     WINNING_STREAK = Isaac.GetItemIdByName("Winning Streak")
@@ -53,9 +57,52 @@ SlowRoll.Color = Isaac.AddPillEffectToPool(SlowRoll.ID)
 if EID then 
     EID:addCollectible(BOLItemId.RNAIL, "↑ +0.5 Damage#↑ +1 Luck")
     EID:addCollectible(BOLItemId.WINNING_STREAK, "↑ +0.5 Damage per point of luck#!!! Cap at +12 luck")
+
     EID:addPill(SoyBean.ID, "{{Collectible330}} Soy Milk effect for one room#↑ x5.5 Tears rate#↓ 0.2x Damage#")
     EID:addPill(SlowRoll.ID, "↑ x25 Damage#↓ x0.2 Tears#↓ 0.2x Shot Speed#")
+
+    EID:addCard(Card.CARD_TSUN, "Burns every enemy in the current room.", "XIX - Torn The Sun")
 end
+
+function bol:onPostUpdate(player)
+    for _, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity.Type == EntityType.ENTITY_PICKUP and entity.Variant == PickupVariant.PICKUP_TAROTCARD then
+            local data = entity:GetData()
+            local sprite = entity:GetSprite()
+
+            if sprite:IsPlaying("Collect") and data.Picked == nil then
+                data.Picked = true
+                cardCooldown = 30
+            end
+
+            if Input.IsActionPressed(ButtonAction.ACTION_DROP, 0) and Input.IsActionPressed(ButtonAction.ACTION_DROP, 1) then
+                cardCooldown = 30
+            end
+
+            if data.Init == nil then
+                data.Init = (cardCooldown == 0)
+
+                if data.Init then
+                    for _, buddy in pairs(Isaac.GetRoomEntities()) do
+                        if buddy.Type == entity.Type and buddy.Variant == entity.Variant and buddy.SubType == entity.SubType and buddy.Position.X ~= entity.Position.X and buddy.Position.Y ~= entity.Position.Y then
+                            data.Init = false
+                        end
+                    end
+                end
+
+                if data.Init then
+                    local roll = entity:GetDropRNG():RandomFloat() 
+                        if roll < newCardChance then 
+                            entity.SubType = Card.CARD_TSUN
+                    end
+                end
+            end
+        end
+    end
+    cardCooldown = math.max(0, cardCooldown - 1)
+end
+
+bol:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, bol.onPostUpdate)
 
 function bol:onCache(player, cacheFlag)
     if cacheFlag == CacheFlag.CACHE_DAMAGE then 
@@ -64,7 +111,7 @@ function bol:onCache(player, cacheFlag)
         end
 
        if player:HasCollectible(BOLItemId.WINNING_STREAK) then
-            wsLuck = player.Luck
+            local wsLuck = player.Luck
 
             if wsLuck >= 1 then
 
@@ -164,3 +211,15 @@ function SlowRoll.Proc(_PillEffect)
 end
 
 bol:AddCallback(ModCallbacks.MC_USE_PILL, SlowRoll.Proc, SlowRoll.ID)
+
+function useTSun(...)
+    local player = game:GetPlayer(0)
+
+    for i, entity in pairs(Isaac.GetRoomEntities()) do
+        if entity:IsVulnerableEnemy() then 
+            entity:AddBurn(EntityRef(player), 100, 3.5)
+        end
+    end
+end
+
+bol:AddCallback(ModCallbacks.MC_USE_CARD, useTSun, Card.CARD_TSUN)
