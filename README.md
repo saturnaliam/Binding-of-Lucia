@@ -26,3 +26,10 @@ Currently, I have a few ideas, with others still in the works!
 
 ## Passive Items
 Still in production!
+
+## Trinkets
+- [ ] Looking Glass
+  - Removes Curse of the Blind
+  
+- [ ] LED
+  - Removes Curse of Darkness
