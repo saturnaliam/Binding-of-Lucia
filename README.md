@@ -33,3 +33,6 @@ Still in production!
   
 - [ ] LED
   - Removes Curse of Darkness
+
+- [ ] EKG
+  - Removes Curse of the Unknown
