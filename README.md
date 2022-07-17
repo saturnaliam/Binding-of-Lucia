@@ -13,7 +13,7 @@ Currently, I have a few ideas, with others still in the works!
   - Soy Milk for one room
   
  ## New Cards
- All of them can be seen [here!](https://github.com/saturnaliam/Binding-of-Lucia/issues/2)
+ - [ ] [Torn Tarot Cards](https://github.com/saturnaliam/Binding-of-Lucia/milestone/1)
 
 ## Active Items
 - [ ] Damnation
