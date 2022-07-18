@@ -10,7 +10,9 @@ local cardCooldown = 0
 
 local BOLItemId = {
     RNAIL = Isaac.GetItemIdByName("Roofing Nail"),
-    WINNING_STREAK = Isaac.GetItemIdByName("Winning Streak")
+    WINNING_STREAK = Isaac.GetItemIdByName("Winning Streak"),
+
+    LOOKINGGLASS = Isaac.GetTrinketIdByName("Looking Glass")
 }
 
 local BOLHasItem = {
@@ -63,8 +65,10 @@ if EID then
     EID:addPill(SoyBean.ID, "{{Collectible330}} Soy Milk effect for one room#↑ x5.5 Tears rate#↓ 0.2x Damage#")
     EID:addPill(SlowRoll.ID, "↑ x25 Damage#↓ x0.2 Tears#↓ 0.2x Shot Speed#")
 
-    EID:addCard(Card.CARD_TSUN, "Burns every enemy in the current room.", "XIX - The Torn Sun")
-    EID:addCard(Card.CARD_THIER, "Spawns 3 black hearts.", "V - The Torn Hierophant")
+    EID:addCard(Card.CARD_TSUN, "Burns every enemy in the current room", "XIX - The Torn Sun")
+    EID:addCard(Card.CARD_THIER, "Spawns 3 black hearts", "V - The Torn Hierophant")
+
+    --EID:addTrinket()
 end
 
 function bol:onPostUpdate(player)
@@ -186,6 +190,10 @@ function bol:onUpdate(player)
 
     player:AddCacheFlags(CacheFlag.CACHE_ALL)
     player:EvaluateItems()
+
+    if player:GetTrinket(0) == BOLItemId.LOOKINGGLASS or player:GetTrinket(1) == BOLItemId.LOOKINGGLASS then
+        game:GetLevel():RemoveCurses(LevelCurse.CURSE_OF_DARKNESS)
+    end
 end
 
 bol:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, bol.onUpdate)
