@@ -1,4 +1,4 @@
-# Binding-of-Lucia
+# Binding of Lucia
 
 Hey! Welcome to my first The Binding of Isaac: Repentance mod!
 
