@@ -68,7 +68,7 @@ if EID then
     EID:addCard(Card.CARD_TSUN, "Burns every enemy in the current room", "XIX - The Torn Sun")
     EID:addCard(Card.CARD_THIER, "Spawns 3 black hearts", "V - The Torn Hierophant")
 
-    --EID:addTrinket()
+    EID:addTrinket(BOLItemId.LOOKINGGLASS, "{{CurseBlind}} Removes Curse of the Blind", "Looking Glass")
 end
 
 function bol:onPostUpdate(player)
@@ -192,7 +192,7 @@ function bol:onUpdate(player)
     player:EvaluateItems()
 
     if player:GetTrinket(0) == BOLItemId.LOOKINGGLASS or player:GetTrinket(1) == BOLItemId.LOOKINGGLASS then
-        game:GetLevel():RemoveCurses(LevelCurse.CURSE_OF_DARKNESS)
+        game:GetLevel():RemoveCurses(LevelCurse.CURSE_OF_BLIND)
     end
 end
 
