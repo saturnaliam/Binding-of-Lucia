@@ -12,7 +12,8 @@ local BOLItemId = {
     RNAIL = Isaac.GetItemIdByName("Roofing Nail"),
     WINNING_STREAK = Isaac.GetItemIdByName("Winning Streak"),
 
-    LOOKINGGLASS = Isaac.GetTrinketIdByName("Looking Glass")
+    MIRROR_OF_TRUTH = Isaac.GetTrinketIdByName("Mirror of Truth"),
+    LED = Isaac.GetTrinketIdByName("LED")
 }
 
 local BOLHasItem = {
@@ -68,7 +69,7 @@ if EID then
     EID:addCard(Card.CARD_TSUN, "Burns every enemy in the current room", "XIX - The Torn Sun")
     EID:addCard(Card.CARD_THIER, "Spawns 3 black hearts", "V - The Torn Hierophant")
 
-    EID:addTrinket(BOLItemId.LOOKINGGLASS, "{{CurseBlind}} Removes Curse of the Blind", "Looking Glass")
+    EID:addTrinket(BOLItemId.MIRROR_OF_TRUTH, "{{CurseBlind}} Removes Curse of the Blind", "Mirror of Truth")
 end
 
 function bol:onPostUpdate(player)
@@ -191,8 +192,12 @@ function bol:onUpdate(player)
     player:AddCacheFlags(CacheFlag.CACHE_ALL)
     player:EvaluateItems()
 
-    if player:GetTrinket(0) == BOLItemId.LOOKINGGLASS or player:GetTrinket(1) == BOLItemId.LOOKINGGLASS then
+    if player:GetTrinket(0) == BOLItemId.MIRROR_OF_TRUTH or player:GetTrinket(1) == BOLItemId.MIRROR_OF_TRUTH then
         game:GetLevel():RemoveCurses(LevelCurse.CURSE_OF_BLIND)
+    end
+
+    if player:GetTrinket(0) == BOLItemId.LED or player:GetTrinket(1) == BOLItemId.LED then
+        game:GetLevel():RemoveCurses(LevelCurse.CURSE_OF_DARKNESS)
     end
 end
 
