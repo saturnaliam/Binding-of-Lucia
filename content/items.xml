@@ -2,6 +2,7 @@
     <passive cache="damage luck" name="Roofing Nail" description="Sturdy!" gfx="roofing-nail.png" quality="2" tags="summonable offensive" devilprice="1" />
     <passive cache="damage" name="Winning Streak" description="Today's your lucky day!" gfx="winning-streak.png" quality="3" tags="offensive" />
 
-    <trinket name="Lens of Truth" description="Pristine and clear!" gfx="lookingglass.png" />
+    <trinket name="Lens of Truth" description="Is this some kind of reference?" gfx="lookingglass.png" />
     <trinket name="LED" description="Really brightens the room!" gfx="LED.png" />
+    <trinket name="EKG" description="Don't flatline!" gfx="EKG.png"/>
 </items>

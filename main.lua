@@ -13,7 +13,8 @@ local BOLItemId = {
     WINNING_STREAK = Isaac.GetItemIdByName("Winning Streak"),
 
     LENS_OF_TRUTH = Isaac.GetTrinketIdByName("Lens of Truth"),
-    LED = Isaac.GetTrinketIdByName("LED")
+    LED = Isaac.GetTrinketIdByName("LED"),
+    EKG = Isaac.GetTrinketIdByName("EKG")
 }
 
 local BOLHasItem = {
@@ -71,6 +72,7 @@ if EID then
 
     EID:addTrinket(BOLItemId.LED, "{{CurseDarkness}} Removes Curse of Darkness", "LED")
     EID:addTrinket(BOLItemId.LENS_OF_TRUTH, "{{CurseBlind}} Removes Curse of the Blind", "Lens of Truth")
+    EID:addTrinket(BOLItemId.EKG, "{{CurseUnknown}} Removes Curse of the Blind", "EKG")
 end
 
 function bol:onPostUpdate(player)
@@ -199,6 +201,10 @@ function bol:onUpdate(player)
 
     if player:GetTrinket(0) == BOLItemId.LED or player:GetTrinket(1) == BOLItemId.LED then
         game:GetLevel():RemoveCurses(LevelCurse.CURSE_OF_DARKNESS)
+    end
+
+    if player:GetTrinket(0) == BOLItemId.EKG or player:GetTrinket(1) == BOLItemId.EKG then
+        game:GetLevel():RemoveCurses(LevelCurse.CURSE_OF_THE_UNKNOWN)
     end
 end
 
