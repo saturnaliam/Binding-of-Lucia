@@ -3,5 +3,5 @@
     <passive cache="damage" name="Winning Streak" description="Today's your lucky day!" gfx="winning-streak.png" quality="3" tags="offensive" />
 
     <trinket name="Lens of Truth" description="Pristine and clear!" gfx="lookingglass.png" />
-    <trinket name="LED" description="Really brightens the room!" gfx="lookingglass.png" />
+    <trinket name="LED" description="Really brightens the room!" gfx="LED.png" />
 </items>

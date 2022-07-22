@@ -69,6 +69,7 @@ if EID then
     EID:addCard(Card.CARD_TSUN, "Burns every enemy in the current room", "XIX - The Torn Sun")
     EID:addCard(Card.CARD_THIER, "Spawns 3 black hearts", "V - The Torn Hierophant")
 
+    EID:addTrinket(BOLItemId.LED, "{{CurseDarkness}} Removes Curse of Darkness", "LED")
     EID:addTrinket(BOLItemId.LENS_OF_TRUTH, "{{CurseBlind}} Removes Curse of the Blind", "Lens of Truth")
 end
 
