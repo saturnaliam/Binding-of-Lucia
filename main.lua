@@ -1,13 +1,16 @@
+---@diagnostic disable: undefined-field
 local bol = RegisterMod("The Binding of Lucia", 1)
 local game = Game()
 local MAX_TEAR = 5
 
+-- Defines new cards, and some chances for them spawning in.
 Card.CARD_TSUN = Isaac.GetCardIdByName("TTheSun")
 Card.CARD_THIER = Isaac.GetCardIdByName("THierophant")
 local newCardChance = 1
 local newCardChance = 0.05
 local cardCooldown = 0
 
+-- Adds the IDs for new items and trinkets.
 local BOLItemId = {
     RNAIL = Isaac.GetItemIdByName("Roofing Nail"),
     WINNING_STREAK = Isaac.GetItemIdByName("Winning Streak"),
@@ -18,11 +21,7 @@ local BOLItemId = {
     NORTH_STAR = Isaac.GetTrinketIdByName("North Star")
 }
 
-local BOLHasItem = {
-    RNail = false,
-    winningStreak = false
-}
-
+-- Status bonuses for new items.
 local BOLItemBonus = {
     RNAIL_DMG = 0.5,
     RNAIL_LCK = 1,
@@ -42,6 +41,7 @@ local BOLItemBonus = {
     }
 }
 
+-- Defines new pills
 local SoyBean = {
     ID = Isaac.GetPillEffectByName("Soy Bean!"),
     BONUS_TEAR_MULT = 5.5,
@@ -60,7 +60,7 @@ local SlowRoll = {
 SoyBean.Color = Isaac.AddPillEffectToPool(SoyBean.ID)
 SlowRoll.Color = Isaac.AddPillEffectToPool(SlowRoll.ID)
 
--- EID Descriptions
+-- EID Descriptions for new items, pills, and trinkets.
 if EID then 
     EID:addCollectible(BOLItemId.RNAIL, "↑ +0.5 Damage#↑ +1 Luck")
     EID:addCollectible(BOLItemId.WINNING_STREAK, "↑ +0.5 Damage per point of luck#!!! Cap at +12 luck")
@@ -77,6 +77,7 @@ if EID then
     EID:addTrinket(BOLItemId.NORTH_STAR, "{{CurseLost}} Removes Curse of the Lost", "North Star")
 end
 
+-- After the main update function
 function bol:onPostUpdate(player)
     for _, entity in pairs(Isaac.GetRoomEntities()) do
         if entity.Type == EntityType.ENTITY_PICKUP and entity.Variant == PickupVariant.PICKUP_TAROTCARD then
@@ -117,6 +118,7 @@ end
 
 bol:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, bol.onPostUpdate)
 
+-- When the cache is called, used to updates stats
 function bol:onCache(player, cacheFlag)
     if cacheFlag == CacheFlag.CACHE_DAMAGE then 
         if player:HasCollectible(BOLItemId.RNAIL) then
@@ -178,7 +180,7 @@ end
 
 bol:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, bol.onCache)
 
--- Updates passive effects
+-- When the update function is called once per frame.
 function bol:onUpdate(player)
     if game:GetFrameCount() == 1 then
 
@@ -216,6 +218,7 @@ end
 
 bol:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, bol.onUpdate)
 
+-- When the pills have been called
 function SoyBean.Proc(_PillEffect) 
     local player = game:GetPlayer(0)
     SoyBean.OldDmg = player.Damage
@@ -241,6 +244,7 @@ end
 
 bol:AddCallback(ModCallbacks.MC_USE_PILL, SlowRoll.Proc, SlowRoll.ID)
 
+-- When the new cards are called.
 function useTSun(...)
     local player = game:GetPlayer(0)
 
