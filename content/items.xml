@@ -5,4 +5,5 @@
     <trinket name="Lens of Truth" description="Is this some kind of reference?" gfx="lookingglass.png" />
     <trinket name="LED" description="Really brightens the room!" gfx="LED.png" />
     <trinket name="EKG" description="Don't flatline!" gfx="EKG.png"/>
-</items>
+    <trinket name="North Star" description="Akshually it's called Polaris..." gfx="north-star.png" />
+</items> 
