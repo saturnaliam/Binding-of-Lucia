@@ -72,7 +72,7 @@ if EID then
 
     EID:addTrinket(BOLItemId.LED, "{{CurseDarkness}} Removes Curse of Darkness", "LED")
     EID:addTrinket(BOLItemId.LENS_OF_TRUTH, "{{CurseBlind}} Removes Curse of the Blind", "Lens of Truth")
-    EID:addTrinket(BOLItemId.EKG, "{{CurseUnknown}} Removes Curse of the Blind", "EKG")
+    EID:addTrinket(BOLItemId.EKG, "{{CurseUnknown}} Removes Curse of the Unknown", "EKG")
 end
 
 function bol:onPostUpdate(player)
