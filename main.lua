@@ -6,9 +6,6 @@ local MAX_TEAR = 5
 -- Defines new cards, and some chances for them spawning in.
 Card.CARD_TSUN = Isaac.GetCardIdByName("TTheSun")
 Card.CARD_THIER = Isaac.GetCardIdByName("THierophant")
-local newCardChance = 1
-local newCardChance = 0.05
-local cardCooldown = 0
 
 -- Adds the IDs for new items and trinkets.
 local BOLItemId = {
@@ -77,46 +74,6 @@ if EID then
     EID:addTrinket(BOLItemId.NORTH_STAR, "{{CurseLost}} Removes Curse of the Lost", "North Star")
 end
 
--- After the main update function
-function bol:onPostUpdate(player)
-    for _, entity in pairs(Isaac.GetRoomEntities()) do
-        if entity.Type == EntityType.ENTITY_PICKUP and entity.Variant == PickupVariant.PICKUP_TAROTCARD then
-            local data = entity:GetData()
-            local sprite = entity:GetSprite()
-
-            if sprite:IsPlaying("Collect") and data.Picked == nil then
-                data.Picked = true
-                cardCooldown = 30
-            end
-
-            if Input.IsActionPressed(ButtonAction.ACTION_DROP, 0) and Input.IsActionPressed(ButtonAction.ACTION_DROP, 1) then
-                cardCooldown = 30
-            end
-
-            if data.Init == nil then
-                data.Init = (cardCooldown == 0)
-
-                if data.Init then
-                    for _, buddy in pairs(Isaac.GetRoomEntities()) do
-                        if buddy.Type == entity.Type and buddy.Variant == entity.Variant and buddy.SubType == entity.SubType and buddy.Position.X ~= entity.Position.X and buddy.Position.Y ~= entity.Position.Y then
-                            data.Init = false
-                        end
-                    end
-                end
-
-                if data.Init then
-                    local roll = entity:GetDropRNG():RandomFloat() 
-                        if roll < newCardChance then 
-                            entity.SubType = Card.CARD_THIER
-                    end
-                end
-            end
-        end
-    end
-    cardCooldown = math.max(0, cardCooldown - 1)
-end
-
-bol:AddCallback(ModCallbacks.MC_POST_PEFFECT_UPDATE, bol.onPostUpdate)
 
 -- When the cache is called, used to updates stats
 function bol:onCache(player, cacheFlag)
