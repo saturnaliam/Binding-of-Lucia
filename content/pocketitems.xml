@@ -1,6 +1,7 @@
 <pocketitems>
     <card name="XIX - The Torn Sun" description="May your enemies be embraced by the flames" pickup="160" mimiccharge="4" hud="TTheSun" />
     <card name="V - The Torn Hierophant" description="Three blessings for the damned" pickup="160" mimiccharge="4" hud="THierophant" />
+    <card name="VII - Torn Justice" description="May the universe have mercy on your soul." pickup="160" mimiccharge="6" hud="TJustice" />
 
     <pilleffect name="Soy Bean!" class="2" mimic="3" />
     <pilleffect name="Slow Roll!" class="2" mimic="4" />

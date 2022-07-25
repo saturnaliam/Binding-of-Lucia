@@ -6,6 +6,7 @@ local MAX_TEAR = 5
 -- Defines new cards, and some chances for them spawning in.
 Card.CARD_TSUN = Isaac.GetCardIdByName("TTheSun")
 Card.CARD_THIER = Isaac.GetCardIdByName("THierophant")
+Card.CARD_TJUST = Isaac.GetCardIdByName("TJustice")
 
 -- Adds the IDs for new items and trinkets.
 local BOLItemId = {
@@ -59,6 +60,11 @@ SlowRoll.Color = Isaac.AddPillEffectToPool(SlowRoll.ID)
 
 -- EID Descriptions for new items, pills, and trinkets.
 if EID then 
+    local mySprite = Sprite()
+    mySprite:Load("gfx/ui_cardfronts.anm2", true)
+    local tHierId = Isaac.GetCardIdByName("THierophant")
+    EID:addIcon("Card"..tHierId, "THierophant", -1, 9, 9, -1, 0, mySprite)
+
     EID:addCollectible(BOLItemId.RNAIL, "↑ +0.5 Damage#↑ +1 Luck")
     EID:addCollectible(BOLItemId.WINNING_STREAK, "↑ +0.5 Damage per point of luck#!!! Cap at +12 luck")
 
@@ -66,7 +72,7 @@ if EID then
     EID:addPill(SlowRoll.ID, "↑ x25 Damage#↓ x0.2 Tears#↓ 0.2x Shot Speed#")
 
     EID:addCard(Card.CARD_TSUN, "Burns every enemy in the current room", "XIX - The Torn Sun")
-    EID:addCard(Card.CARD_THIER, "Spawns 3 black hearts", "V - The Torn Hierophant")
+    EID:addCard(Card.CARD_THIER, "Spawns 3 black hearts", "{{Card"..tHierId.."}} V - The Torn Hierophant")
 
     EID:addTrinket(BOLItemId.LED, "{{CurseDarkness}} Removes Curse of Darkness", "LED")
     EID:addTrinket(BOLItemId.LENS_OF_TRUTH, "{{CurseBlind}} Removes Curse of the Blind", "Lens of Truth")
@@ -140,7 +146,7 @@ bol:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, bol.onCache)
 -- When the update function is called once per frame.
 function bol:onUpdate(player)
     if game:GetFrameCount() == 1 then
-
+        print(Card.CARD_TJUST)
     end
     
     if SoyBean.Room ~= nil and game:GetLevel():GetCurrentRoomIndex() ~= SoyBean.Room then
@@ -223,3 +229,13 @@ function useTHier(...)
 end
 
 bol:AddCallback(ModCallbacks.MC_USE_CARD, useTHier, Card.CARD_THIER)
+
+function useTJustice(...)
+    if game.TimeCounter <= 9000 then
+        game.TimeCounter = 0
+    else 
+        game.TimeCounter = game.TimeCounter - 9000
+    end
+end
+
+bol:AddCallback(ModCallbacks.MC_USE_CARD, useTJustice, Card.CARD_TJUST)
